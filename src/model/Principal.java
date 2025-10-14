@@ -22,6 +22,17 @@ public class Principal {
 			switch (opcao) {
 			case 1:
 				System.out.println("Cadastrar Jogo");
+				
+				System.out.println("Insira o nome do Jogo: ");
+				String nome = sc.nextLine();
+				
+				System.out.println("Insira o Gênero do Jogo: ");
+				String genero = sc.nextLine(); 
+				
+				System.out.println("Insira a nota do Jogo: ");
+				double nota = sc.nextDouble();				
+				
+				
 				break;
 
 			case 2:

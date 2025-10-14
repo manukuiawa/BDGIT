@@ -22,10 +22,9 @@ public class Jogo {
 	public Jogo(String nome, String genero, Date dataLancamento, double nota) {
 		super();
 		this.nome = nome;
-		this.email = email;
-		this.curso = curso;
-		this.dataNascimento = dataNascimento;
-		this.desempenho = desempenho;
+		this.genero = genero;
+		this.dataLancamento = dataLancamento;;
+		this.nota = nota;
 	}
 
 	public int getId() {
