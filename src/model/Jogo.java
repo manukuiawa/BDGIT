@@ -9,9 +9,12 @@ public class Jogo {
 	private String genero;
 	private Date dataLancamento;
 	private double nota;
+	
+	public Jogo() {
+		
+	}
 
 	public Jogo(int id, String nome, String genero, Date dataLancamento, double nota) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.genero = genero;
