@@ -1,7 +1,9 @@
 package model;
 
-import dao.JogoDao;
+import java.util.List;
 import java.util.Scanner;
+
+import dao.JogoDao;
 
 public class Principal {
 
@@ -18,11 +20,11 @@ public class Principal {
             System.out.print("Escolha uma opção: ");
 
             opcao = sc.nextInt();
-            sc.nextLine(); // consome o \n deixado pelo nextInt()
+            sc.nextLine(); 
 
             switch (opcao) {
                 case 1:
-                    System.out.println("Cadastrar Jogo");
+                    System.out.println("Cadastrar Jogos---------------");
 
                     System.out.print("Insira o nome do Jogo: ");
                     String nome = sc.nextLine();
@@ -30,18 +32,18 @@ public class Principal {
                     System.out.print("Insira o gênero do Jogo: ");
                     String genero = sc.nextLine();
 
-                    System.out.print("Insira a data de lançamento (no formato yyyy-MM-dd): ");
+                    System.out.print("Insira a data de lançamento (no formato yyyy-MM-dd): "); //o formato do EUA
                     String data = sc.nextLine();
 
                     System.out.print("Insira a nota do Jogo: ");
-                    String notaStr = sc.nextLine().replace(",", "."); // permite digitar com vírgula
+                    String notaStr = sc.nextLine().replace(",", "."); // pro usuario digitar com virgula, como sao acostumados
                     double nota = Double.parseDouble(notaStr);
 
                     // Criar objeto Jogo
                     Jogo jogoNovo = new Jogo();
                     jogoNovo.setNome(nome);
                     jogoNovo.setGenero(genero);
-                    jogoNovo.setDataLancamento(java.sql.Date.valueOf(data)); // converte String para Date
+                    jogoNovo.setDataLancamento(java.sql.Date.valueOf(data)); // conversao de string para data
                     jogoNovo.setNota(nota);
 
                     // DAO para cadastrar
@@ -52,7 +54,22 @@ public class Principal {
                     break;
 
                 case 2:
-                    System.out.println("Listar Jogo");
+                    System.out.println("Listar Jogos---------------");
+                    JogoDao dao2 = new JogoDao();
+                    List<Jogo> lista = dao2.listarJogos();
+                    
+                    if (lista != null && !lista.isEmpty()) { //basicamente verifica se a lista está vazia ou não
+                    	for (Jogo j: lista) { //percorre a lista e mostra se tem jogos cadastrados
+                    		System.out.println("Nome: " + j.getNome());
+                    		System.out.println("Gênero: " + j.getGenero());
+                            System.out.println("Data de Lançamento: " + j.getDataLancamento());
+                            System.out.println("Nota: " + j.getNota());
+                            System.out.println("");
+                    	} 
+                    } else {
+                    	System.out.println("Nenhum Jogo Cadastrado!! Cadastre um Novo Jogo");
+                    }
+                    
                     break;
 
                 case 3:
