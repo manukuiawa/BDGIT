@@ -23,35 +23,60 @@ public class Principal {
             sc.nextLine(); 
 
             switch (opcao) {
-                case 1:
-                    System.out.println("Cadastrar Jogos---------------");
+            case 1:
+                System.out.println("Cadastrar Jogos---------------");
+                sc.nextLine(); 
 
-                    System.out.print("Insira o nome do Jogo: ");
-                    String nome = sc.nextLine();
+                
+                System.out.print("Insira o nome do Jogo: ");
+                String nome = sc.nextLine();
 
-                    System.out.print("Insira o gênero do Jogo: ");
-                    String genero = sc.nextLine();
+                
+                System.out.print("Insira o gênero do Jogo: ");
+                String genero = sc.nextLine();
 
-                    System.out.print("Insira a data de lançamento (no formato yyyy-MM-dd): "); //o formato do EUA
+                
+                java.sql.Date dataLancamento = null;
+                while (dataLancamento == null) {
+                    System.out.print("Insira a data de lançamento (yyyy-MM-dd): ");
                     String data = sc.nextLine();
+                    try {
+                        dataLancamento = java.sql.Date.valueOf(data);
+                    } catch (IllegalArgumentException e) { //aqui eu coloquei uma exceção caso digite a data errada
+                        System.out.println("Data inválida! Digite no formato yyyy-MM-dd.");
+                    }
+                }
 
-                    System.out.print("Insira a nota do Jogo: ");
-                    String notaStr = sc.nextLine().replace(",", "."); // pro usuario digitar com virgula, como sao acostumados
-                    double nota = Double.parseDouble(notaStr);
+                
+                double nota = -1;
+                while (nota < 0 || nota > 10) {
+                    System.out.print("Insira a nota do Jogo de 0 a 10: "); //aqui faz a verificação da nota
+                    String notaStr = sc.nextLine().replace(",", ".");
+                    try {
+                        nota = Double.parseDouble(notaStr);
+                        if (nota < 0 || nota > 10) System.out.println("Nota inválida! Deve ser entre 0 e 10.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Digite um número válido!");
+                    }
+                }
 
-                    // Criar objeto Jogo
-                    Jogo jogoNovo = new Jogo();
-                    jogoNovo.setNome(nome);
-                    jogoNovo.setGenero(genero);
-                    jogoNovo.setDataLancamento(java.sql.Date.valueOf(data)); // conversao de string para data
-                    jogoNovo.setNota(nota);
+                // Cria objeto Jogo
+                Jogo jogoNovo = new Jogo();
+                jogoNovo.setNome(nome);
+                jogoNovo.setGenero(genero);
+                jogoNovo.setDataLancamento(dataLancamento);
+                jogoNovo.setNota(nota);
 
-                    // DAO para cadastrar
-                    JogoDao dao = new JogoDao();
-                    dao.inserirJogo(jogoNovo);
+                // DAO para cadastrar (já verifica duplicados)
+                JogoDao dao = new JogoDao();
+                Jogo inserido = dao.inserirJogo(jogoNovo);
 
+                if (inserido != null) {
                     System.out.println("Jogo cadastrado com sucesso!");
-                    break;
+                }
+                break;
+
+
 
                 case 2:
                     System.out.println("Listar Jogos---------------");

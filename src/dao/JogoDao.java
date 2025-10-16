@@ -43,32 +43,47 @@ public class JogoDao {
 
 	// Inserir jogo
 	public Jogo inserirJogo(Jogo jogoNovo) {
-		String consulta = "INSERT INTO jogos (nome, genero, dataLancamento, nota) VALUES (?, ?, ?, ?)";
+	    String consultaVerifica = "SELECT * FROM jogos WHERE nome = ?";
+	    try (Connection conn = getConexao();
+	         PreparedStatement pstVerifica = conn.prepareStatement(consultaVerifica)) {
 
-		try (Connection conn = getConexao();
-				PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+	        pstVerifica.setString(1, jogoNovo.getNome());
+	        ResultSet rsVerifica = pstVerifica.executeQuery();
 
-			pst.setString(1, jogoNovo.getNome());
-			pst.setString(2, jogoNovo.getGenero());
-			pst.setDate(3, jogoNovo.getDataLancamento());
-			pst.setDouble(4, jogoNovo.getNota());
-			pst.executeUpdate();
+	        if (rsVerifica.next()) {
+	            System.out.println("Já existe um jogo com esse nome!");
+	            rsVerifica.close();
+	            return null; // aqui nao deixa inserir 
+	        }
+	        rsVerifica.close();
 
-			ResultSet rs = pst.getGeneratedKeys();
-			if (rs.next()) {
-				int id = rs.getInt(1);
-				jogoNovo.setId(id);
-			}
+	        // Se não existe, insere o jogo
+	        String consultaInserir = "INSERT INTO jogos (nome, genero, dataLancamento, nota) VALUES (?, ?, ?, ?)";
+	        try (PreparedStatement pstInserir = conn.prepareStatement(consultaInserir, Statement.RETURN_GENERATED_KEYS)) {
+	            pstInserir.setString(1, jogoNovo.getNome());
+	            pstInserir.setString(2, jogoNovo.getGenero());
+	            pstInserir.setDate(3, jogoNovo.getDataLancamento());
+	            pstInserir.setDouble(4, jogoNovo.getNota());
+	            pstInserir.executeUpdate();
 
-			rs.close();
-			return jogoNovo;
+	            ResultSet rs = pstInserir.getGeneratedKeys();
+	            if (rs.next()) {
+	                int id = rs.getInt(1);
+	                jogoNovo.setId(id);
+	            }
+	            rs.close();
 
-		} catch (Exception e) {
-			System.out.println("Erro ao inserir jogo:");
-			e.printStackTrace();
-			return null;
-		}
+	            System.out.println("Jogo cadastrado com sucesso!");
+	            return jogoNovo;
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("Erro ao inserir jogo:");
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
+
 	
 	//Listar Jogos
 	public List<Jogo> listarJogos() {
