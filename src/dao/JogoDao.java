@@ -100,4 +100,31 @@ public class JogoDao {
 
 		return jogos;
 	}
-}
+	
+	//Excluir Jogos
+	public void excluirJogo(int id) {
+		String consulta = "DELETE FROM jogos WHERE id = ?";
+	
+		try {
+	        Connection conn = getConexao(); 
+	        PreparedStatement pst = conn.prepareStatement(consulta);
+
+	        pst.setInt(1, id); 
+	        int linhasAfetadas = pst.executeUpdate(); 
+
+	        if (linhasAfetadas > 0) {
+	            System.out.println("Jogo excluído com sucesso!");
+	        } else {
+	            System.out.println("Nenhum jogo encontrado com esse ID.");
+	        }
+
+	        pst.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Erro ao excluir o jogo.");
+	    }
+	}
+		
+	}
+

@@ -60,6 +60,7 @@ public class Principal {
                     
                     if (lista != null && !lista.isEmpty()) { //basicamente verifica se a lista está vazia ou não
                     	for (Jogo j: lista) { //percorre a lista e mostra se tem jogos cadastrados
+                    		System.out.println("ID: " + j.getId());
                     		System.out.println("Nome: " + j.getNome());
                     		System.out.println("Gênero: " + j.getGenero());
                             System.out.println("Data de Lançamento: " + j.getDataLancamento());
@@ -67,13 +68,18 @@ public class Principal {
                             System.out.println("");
                     	} 
                     } else {
-                    	System.out.println("Nenhum Jogo Cadastrado!! Cadastre um Novo Jogo");
+                    	System.out.println("Nenhum Jogo Cadastrado!! Cadastre um Novo Jogo.");
                     }
                     
                     break;
 
                 case 3:
-                    System.out.println("Excluir Jogo");
+                    System.out.println("Excluir Jogo---------------");
+                    System.out.println("Insira o ID do jogo que deseja excluir: ");
+                    int excluir = sc.nextInt();
+                    
+                    JogoDao dao3 = new JogoDao();
+                    dao3.excluirJogo(excluir);
                     break;
 
                 case 4:
